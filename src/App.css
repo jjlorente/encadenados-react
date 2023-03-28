@@ -1,29 +1,81 @@
 .App-header {
   display: flex;
-  font-size: calc(10px + 2vmin);
-  color: blue;
+  flex-direction: column;
+  font-size: calc(10px + 1vmin);
   width: 100%;
+  color: rgb(0, 0, 0);
 }
-.App-header h1{
+
+.App-header h1, .App-header h3{
   margin: auto;
 }
 
 .Word {
+  margin-top: 60px !important;
   display: flex;
-  width: 100%;
   margin: auto;
   justify-content: center;
+  color: rgb(0, 0, 0);
+}
+
+.Word .cont{
+  border-radius: 10px 10px 10px 10px;
+  font-weight: 900 !important;
 }
 
 .wordTip{
-  width: 635px;
-  background-color: aquamarine;
   text-align: center;
   font-size: calc(10px + 1.5vmin);
 }
-.inputWord{
-  margin-left: 6px;
-  width: 50px !important;
-  text-align: center;
-  font-size: calc(10px + 1.5vmin);
+.divSpans{
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  width: 100%;
 }
+.divSpan{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.inputWord,.divSpan{
+  font-family: 'Lexend', sans-serif;
+  margin-left: 2px;
+  margin-right: 2px;
+  width: 5vmin !important;
+  height: 5vmin !important;
+  text-align: center;
+  font-size: clamp(12px, 4vw, 28px);
+  font-weight: bolder;
+  border-radius: 5px 5px 5px 5px;
+  border: 1px black solid;
+}
+i{
+  font-size: clamp(12px, 4vw, 30px);
+}
+.greenInput{
+  background-color: rgba(161, 252, 161, 0.616) !important;
+  color: rgb(0, 0, 0) !important;
+}
+
+.inputWord:focus {
+  background-color: rgba(101, 111, 255, 0.271) !important;
+  border: 1px solid blue;
+}
+
+.wordSpan{
+  text-align: center;
+  font-size: calc(10px + 3vmin);
+}
+
+i {
+  font-weight: 900 !important;;
+}
+
+.heals{
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}
+
