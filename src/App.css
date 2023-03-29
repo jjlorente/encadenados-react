@@ -50,6 +50,7 @@
   font-weight: bolder;
   border-radius: 5px 5px 5px 5px;
   border: 1px black solid;
+  
 }
 i{
   font-size: clamp(12px, 4vw, 30px);

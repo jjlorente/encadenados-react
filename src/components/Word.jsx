@@ -1,238 +1,185 @@
 import React from 'react';
 import '../App.css';
 import dataJS from '../words.json';
-import { useState } from 'react';
-const Swal = require('sweetalert2')
+import { useState, useEffect } from 'react';
+const Swal = require('sweetalert2');
 
 export const Word = () => {
-    const [contador] = useState(1);
-    const [words] = useState(dataJS.dias[contador])
+    const [words] = useState(dataJS.dias[4]);
+    const [inputs, setInputs] = useState([]);
+    const [inputs2, setInputs2] = useState([]);
+
+    useEffect(() => {
+        const word1Guessed = localStorage.getItem("guessedFirstWord") === "true";
+        const word2Guessed = localStorage.getItem("guessedSecondWord") === "true";
+        if (word1Guessed) {
+            const inputs = words[1].split('').map((char, i) => {
+                const inputProps = { maxLength: 1, className: 'inputWord greenInput firstInput',readOnly:true, value: char }
+                return <input id={`input${i}`} key={`input${i}`} type="text" {...inputProps} />;
+            });
+            setInputs(inputs);
+        } else {
+            const inputs = words[1].split('').map((char, i) => {
+                const inputProps = i === 0
+                  ? { maxLength: 1, className: 'inputWord greenInput firstInput',readOnly:true, value: char }
+                  : { maxLength: 1, className: 'inputWord firstInput', ref: el => (inputs[i] = el), onChange: e => handleChange(e, 'input' + i), onKeyDown: e => handleKeyDown(e, 'input' + i) };
+                return <input id={`input${i}`} key={`input${i}`} type="text" {...inputProps} />;
+            });
+            setInputs(inputs);
+        }
+      
+        if (word2Guessed) {
+            const inputs = words[3].split('').map((char, i) => {
+                const inputProps = { maxLength: 1, className: 'inputWord greenInput firstInput', readOnly:true, value: char }
+                return <input id={`input2${i}`} key={`input2${i}`} type="text" {...inputProps} />;
+            });
+            setInputs2(inputs);
+        } else {
+            const inputs2 = words[3].split('').map((char, i) => {
+                const inputProps = i === 0
+                  ? { maxLength: 1, className: 'inputWord greenInput secondInput', readOnly:true, value: char }
+                  : { maxLength: 1, className: 'inputWord secondInput', ref: el => (inputs2[i] = el), onChange: e => handleChange(e, 'input2' + i), onKeyDown: e => handleKeyDown(e, 'input2' + i) };
+                return <input id={`input2${i}`} key={`input2${i}`} type="text" {...inputProps} />;
+              });
+            setInputs2(inputs2);
+        }
+    }, [words]);
+
     
-    const inputs = [];
-    const inputs2 = [];
-    for (let i = 0; i < words[1].length; i++ ) {
-        if (i === 0){
-            inputs.push(<input 
-                style={{width:10}} 
-                className='inputWord greenInput'
-                maxLength="1" 
-                id={'input'+i} 
-                key={'input'+i}
-                type="text"
-                tabIndex="-1"
-                readOnly={true}
-                value={words[1][i]}
-                />
-            );
-        } else {
-            inputs.push(<input 
-                className='inputWord'
-                ref={(input) => (inputs[i] = input)}
-                style={{width:10}} 
-                maxLength="1" 
-                id={'input'+i} 
-                key={'input'+i} 
-                type="text"
-                onKeyDown={(event) => handleKeyDown(event, 'input'+i)}
-                onChange={(event) => handleChange(event, 'input'+i)}
-                />
-            )
-        }
-    }
+    
 
-    for (let i = 0; i < words[3].length; i++ ) {
-        if (i === 0){
-            inputs2.push(<input 
-                style={{width:10}} 
-                className='inputWord greenInput'
-                maxLength="1" 
-                id={'input2'+i} 
-                key={'input2'+i}
-                type="text"
-                readOnly={true}
-                tabIndex="-1"
-                value={words[3][i]}
-                />
-            );
-        } else {
-            inputs2.push(<input 
-                className='inputWord'
-                ref={(input) => (inputs2[i] = input)}
-                style={{width:10}} 
-                maxLength="1" 
-                id={'input2'+i} 
-                key={'input2'+i} 
-                type="text"
-                onKeyDown={(event) => handleKeyDown(event, 'input2'+i)}
-                onChange={(event) => handleChange(event, 'input2'+i)}
-                />
-            )
-        }
-    }
-
-    function handleChange(event, id){
-        const inputID = id;
-        //Next input for focus
-        const nextInput = Number(inputID[inputID.length-1]) + 1;
-        const newId = id.slice(0, -1) + nextInput;
-        const input = document.getElementById(id);
-        const newInput = document.getElementById(newId);
-
-        //Only string valid
-        input.value = input.value.toUpperCase();
-        input.value = input.value.replace(/[^a-z]/gi, '')
-        
-        if (newInput && document.getElementById(id).value !== "" ) {
-            console.log("gola");
-            newInput.focus();
-        }
-        
-    }
+   function handleChange(event, id) {
+       const currentInputId = id;
+       const nextInputId = currentInputId.slice(0, -1) + (Number(currentInputId.slice(-1)) + 1);
+       const currentInput = document.getElementById(currentInputId);
+       const nextInput = document.getElementById(nextInputId);
+   
+       currentInput.value = currentInput.value.trim().toUpperCase().replace(/[^a-z]/gi, '');
+   
+       if (nextInput && currentInput.value !== '') {
+           nextInput.focus();
+       }
+   }
 
     function handleKeyDown(event, id) {
         const inputID = id;
         const prevInput = Number(inputID[inputID.length-1]) - 1;
         const input = id.slice(0, -1) + prevInput;
+        
         if (prevInput >= 1) {
-            if (event.key === "Backspace" && document.getElementById(id).value === "") {
-                console.log("dasa")
-                document.getElementById(input).focus();
-            }
+          if (event.key === "Backspace" && document.getElementById(id).value === "") {
+            document.getElementById(input).focus();
+            event.preventDefault();
+          }
         }
     }
+      
 
-
-    const [contadorInput, setContadorInput] = useState(1);
-    const [contadorInput2, setContadorInput2] = useState(1);
     const onFormSubmit = (event) => {
-        let inputsIncomplete = false;
-        const inputList = event.target.id === "form1" ? inputs : inputs2;
-        inputList.forEach(input => {
-            if(input.value === ""){
-                inputsIncomplete = true;
-            }
-        });
-
-        if(inputsIncomplete) {
-            Swal.fire(
-                'Palabra incompleta?',
-                'Fijate que la palabra necesita más letras!',
-                'question'
-            )
-        } else {
-            let letters;
-
-            if(inputList === inputs){
-                letters = words[1][0];
-            } else {
-                letters = words[3][0];
-            }
-            
-            inputList.forEach(input => {
-                if(input.value){
-                    letters = letters + input.value;
-                }      
-            })
-
-            if(inputList === inputs){
-                if(words[1] === letters) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Palabra correcta!',
-                        showConfirmButton: false,
-                        timer: 1500,
-                      })
-
-                } else {
-                    Swal.fire({
-                        title: 'Palabra incorrecta!',
-                        text: 'Te damos una letra mas como ayuda.',
-                        icon: 'error',
-                        confirmButtonText: 'Vamos'
-                    })
-                    inputs[contadorInput].value = words[1][contadorInput];
-                    inputs[contadorInput].readOnly = true;
-                    inputs[contadorInput].className = "inputWord greenInput";
-                    setContadorInput(contadorInput+1);
-                    for(let i = contadorInput+1; i < inputs.length; i++) {
-                        inputs[i].value = "";
-                    }
-                }
-            } else {
-                if(words[3] === letters) {
-                    Swal.fire({
-                        icon: 'success',
-                        title: 'Palabra correcta!',
-                        showConfirmButton: false,
-                        timer: 1500
-                      })
-                } else {
-                    Swal.fire({
-                        title: 'Palabra incorrecta!',
-                        text: 'Te damos una letra mas como ayuda.',
-                        icon: 'error',
-                        confirmButtonText: 'Vamos'
-                    })
-                    inputs2[contadorInput2].value = words[3][contadorInput2];
-                    inputs2[contadorInput2].readOnly = true;
-                    inputs2[contadorInput2].className = "inputWord greenInput";
-                    setContadorInput2(contadorInput2+1);
-                    for(let i = contadorInput2+1; i < inputs2.length; i++) {
-                        inputs2[i].value = "";
-                    }
-                }
-            }
+      event.preventDefault();
+    
+      let inputsIncomplete = false;
+      const isForm1 = event.target.id === "form1";
+      const inputList = isForm1 ? inputs : inputs2;
+    
+      inputList.forEach(input => {
+        if (input.value === "") {
+          inputsIncomplete = true;
         }
-        event.preventDefault();
-      };
+      });
+    
+      if (inputsIncomplete) {
+        Swal.fire(
+          'Palabra incompleta?',
+          'Fijate que la palabra necesita más letras!',
+          'question'
+        )
+      } else {
+        let  letters = isForm1 ? words[1][0] : words[3][0];
+        inputList.forEach(input => {
+          if (input.value) {
+            letters += input.value;
+          }
+        });
+    
+        if (letters === (isForm1 ? words[1] : words[3])) {
+            isForm1 === true 
+            ? localStorage.setItem('guessedFirstWord',true) 
+            : localStorage.setItem('guessedSecondWord',true);
+            showCorrectWordMessage(isForm1);
+        } else {
+            showIncorretWordMessage(isForm1);
+        }
+      }
+    };
+    
+    const showCorrectWordMessage = (isForm1) => {
+        Swal.fire({
+            icon: 'success',
+            title: 'Palabra correcta!',
+            showConfirmButton: false,
+            timer: 1500
+        }).then( function( result )  {
+            const elements = document.getElementsByClassName(isForm1 ? "firstInput" : "secondInput");
+            Array.from(elements).forEach(element => {
+                element.className = `inputWord greenInput ${isForm1 ? "firstInput" : "secondInput"}`;
+                element.readOnly = true;
+            });
+        });
+    };
 
-    return (
+    const showIncorretWordMessage = (isForm1) => {
+        let found = false;
+        Swal.fire({
+          title: 'Palabra incorrecta!',
+          text: 'Te damos una letra mas como ayuda.',
+          icon: 'error',
+          confirmButtonText: 'Vamos'
+        }).then(function(result) {
+            const elements = document.getElementsByClassName(isForm1 ? "firstInput" : "secondInput");
+            Array.from(elements).forEach((element,index) => {
+                if(!element.className.includes('greenInput') && found===false ){
+                    isForm1 ?  element.value = words[1][index] : element.value = words[3][index];
+                    element.className = `inputWord greenInput ${isForm1 ? "firstInput" : "secondInput"}`;
+                    element.readOnly = true;
+                    found = true;
+                } else if (!element.className.includes('greenInput')) {
+                    element.value = "";
+                }
+            });
+        });
+      };
+    
+      return (
         <div className="Word">
             <div className='cont'>
                 {words.map((word, index) => {
-                    if ( index === 1 ) {
-                        return ( 
-                            <div key={"divForm"+index} className='wordTip'>
-                                <i className="fas fa-arrow-down" style={{marginBottom:10,marginTop:10}}></i>
-                                <form key={"form"+index} id={"form"+index} onSubmit={onFormSubmit}>
-                                    {inputs.map((input) => (
-                                        input
+                    const isForm = index === 1 || index === 3;
+                    return (
+                        <div key={isForm ? `divForm${index}` : `divSpan${index}`} className='wordTip'>
+                            {isForm ? (
+                                <>
+                                    <i className="fas fa-arrow-down" style={{marginBottom:10,marginTop:10}}></i>
+                                    <form key={`form${index}`} id={`form${index}`} onSubmit={onFormSubmit}>
+                                        {index === 1 ? inputs.map((input) => input) : inputs2.map((input) => input)}
+                                        <button style={{display: 'none'}} type="submit">Enviar</button>
+                                    </form>
+                                    <i className="fas fa-arrow-up" style={{marginBottom:10,marginTop:10}}></i>
+                                </>
+                            ) : (
+                                <div className='divSpans'>
+                                    {word.split("").map((letter, indexLetter) => (
+                                        <div className='divSpan' key={`div${indexLetter}`}>
+                                            <span key={`letter${indexLetter}`}>{letter}</span>
+                                        </div>
                                     ))}
-                                    <button style={{display: 'none'}} type="submit">Enviar</button>
-                                </form>
-                                <i className="fas fa-arrow-up" style={{marginBottom:10,marginTop:10}}></i>
-                            </div> 
-                            
-                        )
-                    } else if ( index === 3 ){
-                        return (
-                        <div key={"divForm"+index} className='wordTip'>
-                            <i className="fas fa-arrow-down" style={{marginBottom:10,marginTop:10}}></i>
-                            <form key={"form"+index} id={"form"+index} onSubmit={onFormSubmit}>
-                                {inputs2.map((input) => (
-                                    input
-                                ))}
-                                <button style={{display: 'none'}} type="submit">Enviar</button>
-                            </form>
-                            <i className="fas fa-arrow-up" style={{marginBottom:10,marginTop:10}}></i>
-                        </div> 
-                        )
-                    } else {
-                        return (
-                        <div key={"divSpan"+index} className='wordTip'>
-                            <div className='divSpans'>
-                                {word.split("").map((letter,indexLetter) => (
-                                    <div className='divSpan' key={"div"+indexLetter}>
-                                        <span key={"letter"+indexLetter}>{letter}</span>
-                                    </div>
-                                ))}
-                            </div>
+                                </div>
+                            )}
                         </div>
-                        )
-                    }
+                    );
                 })}
             </div>
         </div>
-    )
+    );
 
 }
