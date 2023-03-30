@@ -1,7 +1,7 @@
 .App-header {
   display: flex;
   flex-direction: column;
-  font-size: calc(10px + 1vmin);
+  font-size: calc(1rem + 1vmin);
   width: 100%;
   color: rgb(0, 0, 0);
 }
@@ -26,17 +26,36 @@
 .wordTip{
   text-align: center;
   font-size: calc(10px + 1.5vmin);
+
 }
+
+form, .wordTip{
+  margin-bottom: 5px;
+  margin-top: 5px;
+}
+
 .divSpans{
   display: flex;
   flex-direction: row;
   justify-content: center;
-  width: 100%;
+  background-color: #006aff93;
+  height: 100%;
+  align-items: center;
+  border-radius: 20px 20px 20px 20px;
+  padding: 15px;
+  box-shadow: 4px 4px 0px #004cb693,
+    5px 5px 0px #004cb693,
+    6px 6px 0px #004cb693,
+    7px 7px 0px #004cb693,
+    8px 8px 0px #000a1993;
+    border: 2px solid rgba(0, 0, 0, 0.5);
 }
 .divSpan{
   display: flex;
   justify-content: center;
   align-items: center;
+  min-height: 20px;
+  min-width: 20px;
 }
 
 .inputWord,.divSpan{
@@ -49,20 +68,28 @@
   font-size: clamp(12px, 4vw, 28px);
   font-weight: bolder;
   border-radius: 5px 5px 5px 5px;
-  border: 1px black solid;
-  
+  border: 2px rgba(0, 0, 0, 0.7) solid;
+  box-shadow: 0.5px 0.5px 1px 0.5px rgba(0, 0, 0, 0.6);
+  background-color: rgb(255, 255, 255) !important;
+  box-shadow: 0.5px 0.5px 0px #0d0d0d4d,
+    1px 1px 0px #0d0d0d4d,
+    2px 2px 0px #0d0d0d4d,
+    3px 3px 0px #0d0d0d4d,
+    4px 4px 0px #0d0d0d4d;
 }
+
 i{
   font-size: clamp(12px, 4vw, 30px);
 }
+
 .greenInput{
   background-color: rgba(161, 252, 161, 0.616) !important;
   color: rgb(0, 0, 0) !important;
 }
 
 .inputWord:focus {
-  background-color: rgba(101, 111, 255, 0.271) !important;
-  border: 1px solid blue;
+  background-color: rgba(161, 252, 161, 0.616) !important;
+  border: 4px solid rgba(161, 252, 161, 0.616) !important;
 }
 
 .wordSpan{
@@ -80,3 +107,27 @@ i {
   justify-content: space-between;
 }
 
+.cont {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  margin: auto;
+  padding: 10px;
+}
+
+.arrowIcon {
+  font-size: 2rem;
+  padding: 10px; 
+}
+@media(max-width: 768px) {
+  .arrowIcon{
+    font-size: 2rem;
+  }
+}
+ 
+@media (max-width: 480px) { 
+  .arrowIcon{
+    font-size: 1.5rem;
+  } 
+}

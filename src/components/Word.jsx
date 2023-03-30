@@ -5,49 +5,36 @@ import { useState, useEffect } from 'react';
 const Swal = require('sweetalert2');
 
 export const Word = () => {
-    const [words] = useState(dataJS.dias[4]);
+    const dailyWord = dataJS.dias[3];
+    const [words, setWords] = useState(dailyWord);
     const [inputs, setInputs] = useState([]);
     const [inputs2, setInputs2] = useState([]);
-
+    
     useEffect(() => {
         const word1Guessed = localStorage.getItem("guessedFirstWord") === "true";
         const word2Guessed = localStorage.getItem("guessedSecondWord") === "true";
-        if (word1Guessed) {
-            const inputs = words[1].split('').map((char, i) => {
-                const inputProps = { maxLength: 1, className: 'inputWord greenInput firstInput',readOnly:true, value: char }
-                return <input id={`input${i}`} key={`input${i}`} type="text" {...inputProps} />;
-            });
-            setInputs(inputs);
-        } else {
-            const inputs = words[1].split('').map((char, i) => {
-                const inputProps = i === 0
-                  ? { maxLength: 1, className: 'inputWord greenInput firstInput',readOnly:true, value: char }
-                  : { maxLength: 1, className: 'inputWord firstInput', ref: el => (inputs[i] = el), onChange: e => handleChange(e, 'input' + i), onKeyDown: e => handleKeyDown(e, 'input' + i) };
-                return <input id={`input${i}`} key={`input${i}`} type="text" {...inputProps} />;
-            });
-            setInputs(inputs);
-        }
-      
-        if (word2Guessed) {
-            const inputs = words[3].split('').map((char, i) => {
-                const inputProps = { maxLength: 1, className: 'inputWord greenInput firstInput', readOnly:true, value: char }
-                return <input id={`input2${i}`} key={`input2${i}`} type="text" {...inputProps} />;
-            });
-            setInputs2(inputs);
-        } else {
-            const inputs2 = words[3].split('').map((char, i) => {
-                const inputProps = i === 0
-                  ? { maxLength: 1, className: 'inputWord greenInput secondInput', readOnly:true, value: char }
-                  : { maxLength: 1, className: 'inputWord secondInput', ref: el => (inputs2[i] = el), onChange: e => handleChange(e, 'input2' + i), onKeyDown: e => handleKeyDown(e, 'input2' + i) };
-                return <input id={`input2${i}`} key={`input2${i}`} type="text" {...inputProps} />;
-              });
-            setInputs2(inputs2);
-        }
-    }, [words]);
+        createInputs(word1Guessed, 1, 'input', setInputs, inputs, "firstInput");
+        createInputs(word2Guessed, 3, 'input2', setInputs2, inputs2, "secondInput");
+    }, []);
 
+    const createInputs = (wordGuessed, numWord, numInput, setArrayInputs, array, classInput) => {
+        if (wordGuessed) {
+            const array = words[numWord].split('').map((char, i) => {
+                const inputProps = { maxLength: 1, className: `inputWord greenInput ${classInput}`,readOnly:true, value: char }
+                return <input id={`${numInput}${i}`} key={`${numInput}${i}`} type="text" {...inputProps} />;
+            });
+            setArrayInputs(array);
+        } else {
+            const array = words[numWord].split('').map((char, i) => {
+                const inputProps = i === 0
+                  ? { maxLength: 1, className: `inputWord greenInput ${classInput}`,readOnly:true, value: char }
+                  : { maxLength: 1, className: `inputWord ${classInput}`, ref: el => (array[i] = el), onChange: e => handleChange(e, numInput + i), onKeyDown: e => handleKeyDown(e, numInput + i) };
+                return <input id={`${numInput}${i}`} key={`${numInput}${i}`} type="text" {...inputProps} />;
+            });
+            setArrayInputs(array);
+        }
+    }
     
-    
-
    function handleChange(event, id) {
        const currentInputId = id;
        const nextInputId = currentInputId.slice(0, -1) + (Number(currentInputId.slice(-1)) + 1);
@@ -74,7 +61,6 @@ export const Word = () => {
         }
     }
       
-
     const onFormSubmit = (event) => {
       event.preventDefault();
     
@@ -89,11 +75,13 @@ export const Word = () => {
       });
     
       if (inputsIncomplete) {
-        Swal.fire(
-          'Palabra incompleta?',
-          'Fijate que la palabra necesita más letras!',
-          'question'
-        )
+        Swal.fire({
+          title: 'Palabra incompleta?',
+          text: 'Fijate que la palabra necesita más letras!',
+          icon: 'question',
+          confirmButtonText: 'OK',
+          position: 'top'
+        })
       } else {
         let  letters = isForm1 ? words[1][0] : words[3][0];
         inputList.forEach(input => {
@@ -101,8 +89,9 @@ export const Word = () => {
             letters += input.value;
           }
         });
-    
+        console.log(letters)
         if (letters === (isForm1 ? words[1] : words[3])) {
+            console.log("hola")
             isForm1 === true 
             ? localStorage.setItem('guessedFirstWord',true) 
             : localStorage.setItem('guessedSecondWord',true);
@@ -118,7 +107,8 @@ export const Word = () => {
             icon: 'success',
             title: 'Palabra correcta!',
             showConfirmButton: false,
-            timer: 1500
+            timer: 2500,
+            position: 'top'
         }).then( function( result )  {
             const elements = document.getElementsByClassName(isForm1 ? "firstInput" : "secondInput");
             Array.from(elements).forEach(element => {
@@ -134,7 +124,8 @@ export const Word = () => {
           title: 'Palabra incorrecta!',
           text: 'Te damos una letra mas como ayuda.',
           icon: 'error',
-          confirmButtonText: 'Vamos'
+          confirmButtonText: 'OK',
+          position: 'top'
         }).then(function(result) {
             const elements = document.getElementsByClassName(isForm1 ? "firstInput" : "secondInput");
             Array.from(elements).forEach((element,index) => {
@@ -159,12 +150,12 @@ export const Word = () => {
                         <div key={isForm ? `divForm${index}` : `divSpan${index}`} className='wordTip'>
                             {isForm ? (
                                 <>
-                                    <i className="fas fa-arrow-down" style={{marginBottom:10,marginTop:10}}></i>
+                                    <span className='arrowIcon'>⇅</span>                                    
                                     <form key={`form${index}`} id={`form${index}`} onSubmit={onFormSubmit}>
                                         {index === 1 ? inputs.map((input) => input) : inputs2.map((input) => input)}
                                         <button style={{display: 'none'}} type="submit">Enviar</button>
                                     </form>
-                                    <i className="fas fa-arrow-up" style={{marginBottom:10,marginTop:10}}></i>
+                                    <span className='arrowIcon'>⇅</span>
                                 </>
                             ) : (
                                 <div className='divSpans'>
