@@ -1,40 +1,43 @@
 import React from 'react';
 import '../App.css';
 import dataJS from '../words.json';
-import { useState, useEffect } from 'react';
-const Swal = require('sweetalert2');
+import { useState, useEffect, useRef } from 'react';
+import Swal from 'sweetalert2';
+
 
 export const Word = () => {
-    const dailyWord = dataJS.dias[3];
-    const [words, setWords] = useState(dailyWord);
+    const [words, setWords] = useState(dataJS.dias[3]);
     const [inputs, setInputs] = useState([]);
     const [inputs2, setInputs2] = useState([]);
-    
     useEffect(() => {
+        if(!localStorage.getItem("trys")){
+            localStorage.setItem("trys",0);
+        }
         const word1Guessed = localStorage.getItem("guessedFirstWord") === "true";
         const word2Guessed = localStorage.getItem("guessedSecondWord") === "true";
+        
         createInputs(word1Guessed, 1, 'input', setInputs, inputs, "firstInput");
         createInputs(word2Guessed, 3, 'input2', setInputs2, inputs2, "secondInput");
     }, []);
 
-    const createInputs = (wordGuessed, numWord, numInput, setArrayInputs, array, classInput) => {
+    const createInputs = (wordGuessed, numWord, numInput, setArrayInputs, arrayI, classInput) => {
         if (wordGuessed) {
-            const array = words[numWord].split('').map((char, i) => {
+            const array1 = words[numWord].split('').map((char, i) => {
                 const inputProps = { maxLength: 1, className: `inputWord greenInput ${classInput}`,readOnly:true, value: char }
                 return <input id={`${numInput}${i}`} key={`${numInput}${i}`} type="text" {...inputProps} />;
             });
-            setArrayInputs(array);
+            setArrayInputs(array1);
         } else {
-            const array = words[numWord].split('').map((char, i) => {
+            const array2 = words[numWord].split('').map((char, i) => {
                 const inputProps = i === 0
                   ? { maxLength: 1, className: `inputWord greenInput ${classInput}`,readOnly:true, value: char }
-                  : { maxLength: 1, className: `inputWord ${classInput}`, ref: el => (array[i] = el), onChange: e => handleChange(e, numInput + i), onKeyDown: e => handleKeyDown(e, numInput + i) };
+                  : { maxLength: 1, className: `inputWord ${classInput}`,ref: el => array2[i] = el, onChange: e => handleChange(e, numInput + i), onKeyDown: e => handleKeyDown(e, numInput + i) };
                 return <input id={`${numInput}${i}`} key={`${numInput}${i}`} type="text" {...inputProps} />;
             });
-            setArrayInputs(array);
+            setArrayInputs(array2);
         }
     }
-    
+
    function handleChange(event, id) {
        const currentInputId = id;
        const nextInputId = currentInputId.slice(0, -1) + (Number(currentInputId.slice(-1)) + 1);
@@ -60,10 +63,10 @@ export const Word = () => {
           }
         }
     }
-      
+
     const onFormSubmit = (event) => {
       event.preventDefault();
-    
+        
       let inputsIncomplete = false;
       const isForm1 = event.target.id === "form1";
       const inputList = isForm1 ? inputs : inputs2;
@@ -76,7 +79,7 @@ export const Word = () => {
     
       if (inputsIncomplete) {
         Swal.fire({
-          title: 'Palabra incompleta?',
+          title: 'Palabra incompleta',
           text: 'Fijate que la palabra necesita más letras!',
           icon: 'question',
           confirmButtonText: 'OK',
@@ -89,9 +92,7 @@ export const Word = () => {
             letters += input.value;
           }
         });
-        console.log(letters)
         if (letters === (isForm1 ? words[1] : words[3])) {
-            console.log("hola")
             isForm1 === true 
             ? localStorage.setItem('guessedFirstWord',true) 
             : localStorage.setItem('guessedSecondWord',true);
@@ -105,7 +106,7 @@ export const Word = () => {
     const showCorrectWordMessage = (isForm1) => {
         Swal.fire({
             icon: 'success',
-            title: 'Palabra correcta!',
+            title: '¡Palabra correcta!',
             showConfirmButton: false,
             timer: 2500,
             position: 'top'
@@ -121,8 +122,8 @@ export const Word = () => {
     const showIncorretWordMessage = (isForm1) => {
         let found = false;
         Swal.fire({
-          title: 'Palabra incorrecta!',
-          text: 'Te damos una letra mas como ayuda.',
+          title: 'Palabra incorrecta.',
+          text: 'Una letra mas como ayuda.',
           icon: 'error',
           confirmButtonText: 'OK',
           position: 'top'
@@ -143,34 +144,41 @@ export const Word = () => {
     
       return (
         <div className="Word">
-            <div className='cont'>
-                {words.map((word, index) => {
-                    const isForm = index === 1 || index === 3;
-                    return (
-                        <div key={isForm ? `divForm${index}` : `divSpan${index}`} className='wordTip'>
-                            {isForm ? (
-                                <>
-                                    <span className='arrowIcon'>⇅</span>                                    
-                                    <form key={`form${index}`} id={`form${index}`} onSubmit={onFormSubmit}>
-                                        {index === 1 ? inputs.map((input) => input) : inputs2.map((input) => input)}
-                                        <button style={{display: 'none'}} type="submit">Enviar</button>
-                                    </form>
-                                    <span className='arrowIcon'>⇅</span>
-                                </>
-                            ) : (
-                                <div className='divSpans'>
-                                    {word.split("").map((letter, indexLetter) => (
-                                        <div className='divSpan' key={`div${indexLetter}`}>
-                                            <span key={`letter${indexLetter}`}>{letter}</span>
-                                        </div>
-                                    ))}
-                                </div>
-                            )}
-                        </div>
-                    );
-                })}
-            </div>
+          {words.map((word, index) => {
+            const isForm = index === 1 || index === 3;
+            return (
+              <div
+                key={isForm ? `divForm${index}` : `divSpan${index}`}
+                className="wordTip"
+              >
+                {isForm ? (
+                  <>
+                    <span className="arrowIcon">⇅</span>
+                    <form
+                      key={`form${index}`}
+                      id={`form${index}`}
+                      onSubmit={onFormSubmit}
+                    >
+                      {index === 1 ? inputs.map((input) => input) : inputs2.map((input) => input)}
+                      <button style={{ display: "none" }} type="submit">
+                        Enviar
+                      </button>
+                    </form>
+                    <span className="arrowIcon">⇅</span>
+                  </>
+                ) : (
+                  <div className="divSpans">
+                    {word.split("").map((letter, indexLetter) => (
+                      <div className="divSpan" key={`div${indexLetter}`}>
+                        <span key={`letter${indexLetter}`}>{letter}</span>
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            );
+          })}
         </div>
-    );
+      );
 
 }
