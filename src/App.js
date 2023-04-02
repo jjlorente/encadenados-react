@@ -14,6 +14,7 @@ export default function App() {
           <p className='explain'>Debes formar una <span style={{color:'blue'}}>cadena de palabras</span> que tengan relación entre ellas!
           </p>
         </div>
+        {/* <button onClick={()=>{setShowModal(true)}}>AW</button> */}
       </header>
       <section>
         <Word/>

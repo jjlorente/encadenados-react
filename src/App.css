@@ -53,6 +53,7 @@ form, .wordTip{
     7px 7px 0px #004cb693,
     8px 8px 0px #000a1993;
     border: 2px solid rgba(0, 0, 0, 0.5);
+    gap:5px;
 }
 .divSpan{
   display: flex;
@@ -64,12 +65,12 @@ form, .wordTip{
 
 .inputWord,.divSpan{
   font-family: 'Lexend', sans-serif;
-  margin-left: 2px;
-  margin-right: 2px;
-  width: 5vmin !important;
-  height: 5vmin !important;
+  width: 5vmin;
+  height: 5vmin;
   min-height: 30px;
   min-width: 30px;
+  max-height: 60px;
+  max-width: 62px;
   text-align: center;
   font-size: calc(1.2rem + 1.2vmin);
   font-weight: bolder;
@@ -180,8 +181,56 @@ i {
 .explain{
   font-size: calc(0.6rem + 0.6vmin);
 }
+
 .explainDv{
   width: 300px;
   margin: auto;
   text-align: center;
+}
+
+.buttonForm {
+  min-height: 40px;
+  min-width: 40px;
+  margin-left: 2px;
+  margin-right: 2px;
+  background-color: transparent;
+  border: none;
+  margin: auto;
+  max-height: 60px;
+  max-width: 62px;
+}
+
+.buttonForm i {
+  font-size: calc(1.9rem + 1.6vmin);
+  color: #4287ff;
+  transform: rotate(320deg);
+}
+i{
+  text-shadow: 0 0 1px #000;
+}
+.fa-border{
+  border-radius: 100%;
+}
+form{
+  display: flex;
+  gap:5px;
+}
+
+.divForm{
+  margin-left: 65px;
+}
+
+.displayNone {
+  display: none;
+}
+
+@media (max-width: 1440px) { 
+  .divForm{
+    margin-left: 45px !important;
+  }
+}
+@media (min-width: 2000px) { 
+  .divForm{
+    margin-left: 50px !important;
+  }
 }
