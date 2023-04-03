@@ -3,7 +3,6 @@ import '../App.css';
 import dataJS from '../words.json';
 import { useState, useEffect, useRef } from 'react';
 import Swal from 'sweetalert2';
-import Image from "../Assets/flecha-izquierda.png";
 
 export const Word = () => {
   const [words, setWords] = useState(dataJS.dias[1]);
@@ -12,13 +11,21 @@ export const Word = () => {
   const [classForm1, setClassName1] = useState(null);
   const [classForm2, setClassName2] = useState(null);
   const [wordsGuessed, setWordsGuessed] = useState({word1: false, word2: false})
+  const [trueWords, setTrueWords] = useState(null);
 
   useEffect(() => {
-    dailyWord();
     const word1Guessed = localStorage.getItem("guessedFirstWord") === "true";
     const word2Guessed = localStorage.getItem("guessedSecondWord") === "true";
+    dailyWord();
+    if(word1Guessed && word2Guessed){
+      setTrueWords(
+        <button className='relations'>Explicación de las relaciones 
+          <i className="fas fa-question-circle"></i>
+        </button>
+      );
+    }
+  
     checkWordsGuessed(word1Guessed, word2Guessed);
-    
     createInputs(word1Guessed, 1, 'input', setInputs, inputs, "firstInput");
     createInputs(word2Guessed, 3, 'input2', setInputs2, inputs2, "secondInput");
   }, []);
@@ -171,6 +178,16 @@ export const Word = () => {
         ? localStorage.setItem('guessedFirstWord',true) 
         : localStorage.setItem('guessedSecondWord',true);
         showCorrectWordMessage(inputList, isForm1);
+        
+        const word1Guessed = localStorage.getItem("guessedFirstWord") === "true";
+        const word2Guessed = localStorage.getItem("guessedSecondWord") === "true";
+        if(word1Guessed && word2Guessed){
+          setTrueWords(
+            <button className='relations'>Explicación de las relaciones 
+              <i className="fas fa-question-circle"></i>
+            </button>
+          );
+        }
       } else {
         showIncorretWordMessage(inputList, isForm1);
       }
@@ -222,6 +239,7 @@ export const Word = () => {
     
   return (
     <div className="Word">
+      {trueWords}
       {words.map((word, index) => {
         const isForm = index === 1 || index === 3;
         return (
@@ -242,17 +260,17 @@ export const Word = () => {
                       {index === 1 ? inputs.map((input) => input) : inputs2.map((input) => input)}
                       {index === 1 && !wordsGuessed['word1'] ? 
                         <button className='buttonForm' type="submit">
-                          <img src={Image} alt="Arrow"/>      
+                          <i className="fas fa-question-circle"></i>
+                        </button> :
+                        null
+                      }
+                      {index === 3 && !wordsGuessed['word2'] ? 
+                        <button className='buttonForm' type="submit">
+                          <i className="fas fa-question-circle"></i>                     
                         </button> :
                         null
                       }
                     </div>
-                    {index === 3 && !wordsGuessed['word2'] ? 
-                      <button className='buttonForm' type="submit">
-                        <img src={Image} alt="Arrow"/>                      
-                      </button> :
-                      null
-                    }
                   </form>
                 </div>
                 <span className="arrowIcon">⇅</span>

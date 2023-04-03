@@ -6,12 +6,12 @@
   color: rgb(0, 0, 0);
 }
 
-.App-header h1, .App-header h3{
+.App-header h1, .App-header h5{
   margin: auto;
 }
 
 h1 {
-  font-size: calc(1.7rem + 1.7vmin);
+  font-size: calc(1.5rem + 1.5vmin);
   display: flex;
   align-items: center;
 }
@@ -31,7 +31,6 @@ h1 {
 .wordTip{
   text-align: center;
   font-size: calc(10px + 1.5vmin);
-
 }
 
 form, .wordTip{
@@ -105,10 +104,6 @@ i{
   font-size: calc(10px + 3vmin);
 }
 
-i {
-  font-weight: 900 !important;;
-}
-
 .heals{
   display: flex;
   flex-direction: row;
@@ -125,8 +120,33 @@ i {
 }
 
 .arrowIcon {
-  font-size: 2rem;
-  padding: 10px; 
+  font-size: calc(1.2rem + 1.2vmin);
+  margin-left: 5px;
+  margin-right: 5px;
+}
+
+.upArrow{
+  transform: rotate(180deg);
+}
+
+.relationButton{
+  height: 30px;
+  border-radius: 10px;
+  font-size: calc(0.5rem + 0.5vmin) !important;
+  font-family: 'Lexend', sans-serif;
+  background-color: #5476B5;
+  border: 2px black solid;
+  color: white;
+  box-shadow: 1px 1px 0px #181e8993,
+    2px 2px 0px #00000093,
+    3px 3px 0px #03030393;
+    padding: 5px;
+}
+.relationDiv{
+  padding: 5px;
+  display:flex; 
+  justify-content:center;
+  align-items:center;
 }
 @media(max-width: 768px) {
   .arrowIcon{
@@ -201,14 +221,9 @@ i {
   display: flex;
 }
 
-.buttonForm i {
-  font-size: calc(1.9rem + 1.6vmin);
-  color: #4287ff;
-  transform: rotate(320deg);
-}
-
-i{
-  text-shadow: 0 0 1px #000;
+h1 {
+  display: flex;
+  white-space: nowrap;
 }
 
 .fa-border{
@@ -220,39 +235,71 @@ i{
   gap: 5px;
 }
 
-form{
+.divForm {
   display: flex;
   gap:5px;
+  margin-left: 40px;
 }
 
-.divForm{
-  margin-left: 50px;
+@media (max-width: 480px) { 
+  .divForm{
+    margin-left: 10px !important;
+  } 
 }
-
 .displayNone {
   display: none;
 }
 
-@media (max-width: 1440px) { 
-  .divForm{
-    margin-left: 45px !important;
-  }
-}
-@media (min-width: 2000px) { 
-  .divForm{
-    margin-left: 50px !important;
-  }
+.buttonForm {
+  display: flex;
+  justify-content: center;
+  text-align: center;
+  align-items: center;
 }
 
-img{
-  transform: rotate(150deg) !important;
-  max-width: 37px !important;
-  max-height: 37px !important;
+.buttonForm i {
+  font-size: calc(1.6rem + 2.6vmin);
+  color: #4d8eff;
+  transition: all 0.5s ease;
+  border-radius: 100%;
+}
+
+.buttonForm:hover i {
   cursor: pointer;
-  transition: all 0.3s ease;
+  transform: rotate(360deg) !important;
+  color: #2358b4;
 }
 
-img:hover { 
-  transform: rotate(0deg) !important;
-  transform: scale(1.1);
+.relations {
+  font-family: 'Lexend', sans-serif;
+  font-size: calc(0.6rem + 0.6vmin);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 10px;
+  padding: 5px;
+  margin-bottom: 10px;
+  background-color: #307cff;
+  color: white;
+  border: 2px solid black;
+  transition: all 0.5s ease;
+}
+
+.relations i{
+  font-size: calc(0.8rem + 0.8vmin);
+  margin-left: 5px;
+  transition: all 0.5s ease;
+}
+
+.relations:hover{
+  cursor: pointer;
+  background-color: #084EB1;
+}
+
+.relations i{
+  margin-left: 5px;
+}
+
+.relations:hover i{
+  transform: rotate(360deg);
 }

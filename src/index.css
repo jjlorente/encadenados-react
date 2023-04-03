@@ -3,7 +3,7 @@ body {
   font-family: 'Lexend', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  background-color: rgba(196, 196, 196, 0.12);
+  background-color: rgba(196, 196, 196, 0.167);
 }
 
 code {
