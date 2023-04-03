@@ -14,6 +14,35 @@ export const Word = () => {
   const [wordsGuessed, setWordsGuessed] = useState({word1: false, word2: false})
 
   useEffect(() => {
+    dailyWord();
+    const word1Guessed = localStorage.getItem("guessedFirstWord") === "true";
+    const word2Guessed = localStorage.getItem("guessedSecondWord") === "true";
+    checkWordsGuessed(word1Guessed, word2Guessed);
+    
+    createInputs(word1Guessed, 1, 'input', setInputs, inputs, "firstInput");
+    createInputs(word2Guessed, 3, 'input2', setInputs2, inputs2, "secondInput");
+  }, []);
+
+  const createInputs = (wordGuessed, numWord, numInput, setArrayInputs, arrayI, classInput) => {
+    const numDaily = localStorage.getItem("dailyWord");
+    if (wordGuessed) {
+      const array1 = dataJS.dias[numDaily][numWord].split('').map((char, i) => {
+        const inputProps = { maxLength: 1, className: `inputWord greenInput ${classInput}`,readOnly:true, value: char }
+        return <input id={`${numInput}${i}`} key={`${numInput}${i}`} type="text" {...inputProps} />;
+      });
+      setArrayInputs(array1);
+    } else {
+      const array2 = dataJS.dias[numDaily][numWord].split('').map((char, i) => {
+        const inputProps = i === 0
+          ? { maxLength: 1, className: `inputWord greenInput ${classInput}`,readOnly:true, value: char }
+          : { maxLength: 1, className: `inputWord ${classInput}`, onChange: e => handleChange(e, numInput + i), onKeyDown: e => handleKeyDown(e, numInput + i) };
+        return <input id={`${numInput}${i}`} key={`${numInput}${i}`} /* CREAR REF */ type="text" {...inputProps} />;
+      });
+      setArrayInputs(array2);
+    }
+  }
+
+  const dailyWord = () => {
     const fechaActual = new Date(); 
     if (typeof fechaActual === 'string') {
       fechaActual = new Date(fechaActual);
@@ -44,7 +73,6 @@ export const Word = () => {
         localStorage.setItem("day", fechaActual);
         const numDay = Number(localStorage.getItem("dailyWord"));
         localStorage.setItem("dailyWord", numDay+1);
-        //Reset words acertadas
         setWordsGuessed(prevState => ({
           ...prevState,
           word1: true
@@ -55,10 +83,11 @@ export const Word = () => {
     }
     const numDaily = localStorage.getItem("dailyWord");
     setWords(dataJS.dias[Number(numDaily)])
+  }
 
-    const word1Guessed = localStorage.getItem("guessedFirstWord") === "true";
-    !word1Guessed ? setClassName1('divForm') : setClassName1(null);
-    word1Guessed ? 
+  const checkWordsGuessed = (word1, word2) => {
+    !word1 ? setClassName1('divForm') : setClassName1(null);
+    word1 ? 
     setWordsGuessed(prevState => ({
       ...prevState,
       word1: true
@@ -69,9 +98,8 @@ export const Word = () => {
       word1: false
     }));
 
-    const word2Guessed = localStorage.getItem("guessedSecondWord") === "true";
-    !word2Guessed ? setClassName2('divForm') : setClassName2(null);
-    word2Guessed ? 
+    !word2 ? setClassName2('divForm') : setClassName2(null);
+    word2 ? 
     setWordsGuessed(prevState => ({
       ...prevState,
       word2: true
@@ -81,29 +109,6 @@ export const Word = () => {
       ...prevState,
       word2: false
     }));
-
-    createInputs(word1Guessed, 1, 'input', setInputs, inputs, "firstInput");
-    createInputs(word2Guessed, 3, 'input2', setInputs2, inputs2, "secondInput");
-  }, []);
-
-  const createInputs = (wordGuessed, numWord, numInput, setArrayInputs, arrayI, classInput) => {
-    const numDaily = localStorage.getItem("dailyWord");
-    console.log(words)
-    if (wordGuessed) {
-      const array1 = dataJS.dias[numDaily][numWord].split('').map((char, i) => {
-        const inputProps = { maxLength: 1, className: `inputWord greenInput ${classInput}`,readOnly:true, value: char }
-        return <input id={`${numInput}${i}`} key={`${numInput}${i}`} type="text" {...inputProps} />;
-      });
-      setArrayInputs(array1);
-    } else {
-      const array2 = dataJS.dias[numDaily][numWord].split('').map((char, i) => {
-        const inputProps = i === 0
-          ? { maxLength: 1, className: `inputWord greenInput ${classInput}`,readOnly:true, value: char }
-          : { maxLength: 1, className: `inputWord ${classInput}`, onChange: e => handleChange(e, numInput + i), onKeyDown: e => handleKeyDown(e, numInput + i) };
-        return <input id={`${numInput}${i}`} key={`${numInput}${i}`} /* CREAR REF */ type="text" {...inputProps} />;
-      });
-      setArrayInputs(array2);
-    }
   }
 
   function handleChange(event, id) {
