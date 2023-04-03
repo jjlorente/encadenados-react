@@ -36,19 +36,137 @@
         "ESTUDIO"
       ],
       "6": [
-        "palabra16",
-        "palabra17",
-        "SABANA",
-        "MESETA",
-        "CENTRAL"
+        "OÍDO",
+        "TAPON",
+        "BALONCESTO",
+        "TECNICA",
+        "ESTUDIO"
       ],
       "7": [
-        "palabra19",
-        "palabra20",
-        "SABANA",
-        "MESETA",
-        "CENTRAL",
-        "A"
+        "OÍDO",
+        "TAPON",
+        "BALONCESTO",
+        "TECNICA",
+        "ESTUDIO"
+      ],
+      "8": [
+        "MUSICALES",
+        "NOTAS",
+        "EXPEDIENTE",
+        "EQUIS",
+        "RAYOS"
+      ],
+      "9": [
+        "MUSICALES",
+        "NOTAS",
+        "EXPEDIENTE",
+        "EQUIS",
+        "RAYOS"
+      ],
+      "10": [
+        "MUSICALES",
+        "NOTAS",
+        "EXPEDIENTE",
+        "EQUIS",
+        "RAYOS"
+      ],
+      "11": [
+        "MUSICALES",
+        "NOTAS",
+        "EXPEDIENTE",
+        "EQUIS",
+        "RAYOS"
+      ],
+      "12": [
+        "MUSICALES",
+        "NOTAS",
+        "EXPEDIENTE",
+        "EQUIS",
+        "RAYOS"
+      ],
+      "13": [
+        "MUSICALES",
+        "NOTAS",
+        "EXPEDIENTE",
+        "EQUIS",
+        "RAYOS"
+      ],
+      "14": [
+        "MUSICALES",
+        "NOTAS",
+        "EXPEDIENTE",
+        "EQUIS",
+        "RAYOS"
+      ],
+      "15": [
+        "Perro",
+        "Gato",
+        "Conejo",
+        "Hámster",
+        "Ratón"
+      ],
+      "16": [
+        "Leche",
+        "Huevo",
+        "Mantequilla",
+        "Queso",
+        "Yogur"
+      ],
+      "17": [
+        "Plátano",
+        "Manzana",
+        "Pera",
+        "Naranja",
+        "Uva"
+      ],
+      "18": [
+        "Azul",
+        "Verde",
+        "Amarillo",
+        "Rojo",
+        "Morado"
+      ],
+      "19": [
+        "Inglés",
+        "Frances",
+        "Español",
+        "Aleman",
+        "Italiano"
+      ],
+      "20": [
+        "Primavera",
+        "Verano",
+        "Otoño",
+        "Invierno",
+        "Monzón"
+      ],
+      "21": [
+        "Cocina",
+        "Baño",
+        "Dormitorio",
+        "Sala",
+        "Comedor"
+      ],
+      "22": [
+        "CocaCola",
+        "Pepsi",
+        "Fanta",
+        "Sprite",
+        "Mountain Dew"
+      ],
+      "23": [
+        "Periódico",
+        "Revista",
+        "Libro",
+        "Novela",
+        "Cómic"
+      ],
+      "24": [
+        "Soltero",
+        "Casado",
+        "Divorciado",
+        "Viudo",
+        "Separado"
       ]
     }
 }

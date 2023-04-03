@@ -3,9 +3,10 @@ import '../App.css';
 import dataJS from '../words.json';
 import { useState, useEffect, useRef } from 'react';
 import Swal from 'sweetalert2';
+import Image from "../Assets/flecha-izquierda.png";
 
 export const Word = () => {
-  const [words, setWords] = useState(dataJS.dias[3]);
+  const [words, setWords] = useState(dataJS.dias[1]);
   const [inputs, setInputs] = useState([]);
   const [inputs2, setInputs2] = useState([]);
   const [classForm1, setClassName1] = useState(null);
@@ -13,24 +14,48 @@ export const Word = () => {
   const [wordsGuessed, setWordsGuessed] = useState({word1: false, word2: false})
 
   useEffect(() => {
-    const fechaActual = new Date().toISOString().slice(0, 10);
-    console.log(fechaActual)
+    const fechaActual = new Date(); 
+    if (typeof fechaActual === 'string') {
+      fechaActual = new Date(fechaActual);
+    }
+    const anio = fechaActual.getFullYear();
+    const mes = fechaActual.getMonth() + 1;
+    const dia = fechaActual.getDate();
+    const fechaFormateada = `${anio}-${mes}-${dia}`;
+
     const valorActual = localStorage.getItem('day');
     const wordDiaria = localStorage.getItem('dailyWord');
     if(!wordDiaria){
       localStorage.setItem("dailyWord", Number(1));
+    } else {
+      setWords(dataJS.dias[Number(wordDiaria)]);
     }
 
     if(!valorActual){
         localStorage.setItem("day", fechaActual);
     } else {
-      if(fechaActual > valorActual){
+      const fechaGuardada = new Date(valorActual); 
+      const anio = fechaGuardada.getFullYear();
+      const mes = fechaGuardada.getMonth() + 1; 
+      const dia = fechaGuardada.getDate();
+      const fechaFormateadaGuardada = `${anio}-${mes}-${dia}`;
+
+      if(fechaFormateada > fechaFormateadaGuardada){
         localStorage.setItem("day", fechaActual);
         const numDay = Number(localStorage.getItem("dailyWord"));
-        localStorage.setItem("dailyWord", numDay+1 );
+        localStorage.setItem("dailyWord", numDay+1);
+        //Reset words acertadas
+        setWordsGuessed(prevState => ({
+          ...prevState,
+          word1: true
+        })) 
+        localStorage.removeItem("guessedFirstWord");
+        localStorage.removeItem("guessedSecondWord");
       }
     }
-    
+    const numDaily = localStorage.getItem("dailyWord");
+    setWords(dataJS.dias[Number(numDaily)])
+
     const word1Guessed = localStorage.getItem("guessedFirstWord") === "true";
     !word1Guessed ? setClassName1('divForm') : setClassName1(null);
     word1Guessed ? 
@@ -62,14 +87,16 @@ export const Word = () => {
   }, []);
 
   const createInputs = (wordGuessed, numWord, numInput, setArrayInputs, arrayI, classInput) => {
+    const numDaily = localStorage.getItem("dailyWord");
+    console.log(words)
     if (wordGuessed) {
-      const array1 = words[numWord].split('').map((char, i) => {
+      const array1 = dataJS.dias[numDaily][numWord].split('').map((char, i) => {
         const inputProps = { maxLength: 1, className: `inputWord greenInput ${classInput}`,readOnly:true, value: char }
         return <input id={`${numInput}${i}`} key={`${numInput}${i}`} type="text" {...inputProps} />;
       });
       setArrayInputs(array1);
     } else {
-      const array2 = words[numWord].split('').map((char, i) => {
+      const array2 = dataJS.dias[numDaily][numWord].split('').map((char, i) => {
         const inputProps = i === 0
           ? { maxLength: 1, className: `inputWord greenInput ${classInput}`,readOnly:true, value: char }
           : { maxLength: 1, className: `inputWord ${classInput}`, onChange: e => handleChange(e, numInput + i), onKeyDown: e => handleKeyDown(e, numInput + i) };
@@ -84,7 +111,6 @@ export const Word = () => {
     const nextInputId = currentInputId.slice(0, -1) + (Number(currentInputId.slice(-1)) + 1);
     const currentInput = document.getElementById(currentInputId);
     const nextInput = document.getElementById(nextInputId);
-
     currentInput.value = currentInput.value.trim().toUpperCase().replace(/[^a-z]/gi, '');
     if (nextInput && currentInput.value !== '') {
       nextInput.focus();
@@ -201,24 +227,26 @@ export const Word = () => {
             {isForm ? (
               <>
                 <span className="arrowIcon">⇅</span>
-                <div className={index === 1 ? classForm1 : classForm2}>
+                <div className={`${index === 1 ? classForm1 : classForm2} formContainer`}>
                   <form
                     key={`form${index}`}
                     id={`form${index}`}
                     onSubmit={onFormSubmit}
                   >
-                    {index === 1 ? inputs.map((input) => input) : inputs2.map((input) => input)}
-                    {index === 1 && !wordsGuessed['word1'] ? 
-                      <button className='buttonForm' type="submit">
-                        <i className="fa-solid fa-arrow-circle-right"></i>
-                      </button> :
-                      null
-                    }
+                    <div className='inputsRow'>
+                      {index === 1 ? inputs.map((input) => input) : inputs2.map((input) => input)}
+                      {index === 1 && !wordsGuessed['word1'] ? 
+                        <button className='buttonForm' type="submit">
+                          <img src={Image} alt="Arrow"/>      
+                        </button> :
+                        null
+                      }
+                    </div>
                     {index === 3 && !wordsGuessed['word2'] ? 
                       <button className='buttonForm' type="submit">
-                        <i className="fa-solid fa-arrow-circle-right"></i>
+                        <img src={Image} alt="Arrow"/>                      
                       </button> :
-                      <div></div>
+                      null
                     }
                   </form>
                 </div>

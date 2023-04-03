@@ -8,6 +8,8 @@
 # testing
 /coverage
 
+#JSON
+/src/words.json
 # production
 /build
 
