@@ -249,7 +249,9 @@ h1 {
 .displayNone {
   display: none;
 }
-
+.displayBlock {
+  display: block !important;
+}
 .buttonForm {
   display: flex;
   justify-content: center;
@@ -259,7 +261,7 @@ h1 {
 
 .buttonForm i {
   font-size: calc(1.6rem + 2.6vmin);
-  color: #4d8eff;
+  color: #2f7bff;
   transition: all 0.5s ease;
   border-radius: 100%;
 }
@@ -302,4 +304,23 @@ h1 {
 
 .relations:hover i{
   transform: rotate(360deg);
+}
+
+.heartImg {
+  display: block;
+  max-width: 100%;
+  height: auto;
+}
+
+.heart-text{
+  font-size: calc(1rem + 1vmin);
+}
+
+.divHearts{
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: row;
+  gap:5px;
+  padding: 15px;
 }
