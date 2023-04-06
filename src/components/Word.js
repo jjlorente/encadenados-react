@@ -109,8 +109,8 @@ export const Word = () => {
         setClassName1('divForm');
       } else {
         //Otherwise create the input fields, using the createInputs function and passing the values
-        createInputs(word1Guessed, 1, 'input', setInputs, inputs, "firstInput");
-        createInputs(word2Guessed, 3, 'input2', setInputs2, inputs2, "secondInput");
+        await createInputs(word1Guessed, 1, 'input', setInputs, inputs, "firstInput");
+        await createInputs(word2Guessed, 3, 'input2', setInputs2, inputs2, "secondInput");
       }
     };
 
@@ -128,11 +128,12 @@ export const Word = () => {
    * @param {array} arrayI - Array of input elements
    * @param {string} classInput - CSS class name for the input elements
    */
-  const createInputs = (wordGuessed, numWord, numInput, setArrayInputs, arrayI, classInput) => {
+  const createInputs = async (wordGuessed, numWord, numInput, setArrayInputs, arrayI, classInput) => {
     const numDaily = localStorage.getItem("dailyWord");
+    let inputArray = [];
     if (wordGuessed === true) {
       // If the word has already been guessed, create input elements with the word's characters pre-filled in green
-      const inputArray = dataJS.dias[numDaily][numWord]
+      inputArray = dataJS.dias[numDaily][numWord]
         .split('')
         .map((char, i) => {
           const inputProps = { 
@@ -153,7 +154,7 @@ export const Word = () => {
         setArrayInputs(inputArray);
     } else {
       // If the word has not been guessed, create input elements for the user to input each character
-      const inputArray = dataJS.dias[numDaily][numWord]
+      inputArray  = dataJS.dias[numDaily][numWord]
         .split('')
         .map((char, i) => {
           const inputProps = i === 0
@@ -181,6 +182,7 @@ export const Word = () => {
           );
         });
         setArrayInputs(inputArray);
+        return inputArray;
     }
   }
 
@@ -191,7 +193,7 @@ export const Word = () => {
    */
   const dailyWord = async () => {
     // Get the current date
-    const currentDate = new Date(); 
+    let currentDate = new Date(); 
 
     // Check if currentDate is a string and convert to Date object if necessary
     if (typeof currentDate === 'string') {
@@ -514,31 +516,43 @@ export const Word = () => {
    */
   const showCorrectWordMessage = async (inputList, isForm1) => {
     // Display a success message using Swal, a popular third-party library for displaying alerts and modals.
-    Swal.fire({
-      icon: 'success',
-      title: '¡Palabra correcta!', // Spanish for "Correct word!"
-      showConfirmButton: false,
-      timer: 2500,
-      position: 'top'
-    }).then(() => {
-      // Set the class name of the corresponding form elements to null.
-      // This clears any previous classes that may have been added.
-      isForm1 ? setClassName1(null) : setClassName2(null);
-
-      // Loop through each input element in the inputList.
-      inputList.forEach((element) => {
-        // If the element is a button, hide it by setting its class name to 'displayNone'.
-        if (element.tagName === "BUTTON") {
-          element.className = 'displayNone';
-        }
-        // If the element has a value, set its class name to 'inputWord greenInput firstInput' or 'inputWord greenInput secondInput'
-        // depending on the value of isForm1. Also, set its readOnly property to true so that the user cannot modify its value.
-        else if (element.value) {
-          element.className = `inputWord greenInput ${isForm1 ? "firstInput" : "secondInput"}`;
-          element.readOnly = true;
-        }
+    console.log( localStorage.getItem('guessedFirstWord') , localStorage.getItem('guessedSecondWord'))
+    if (localStorage.getItem('guessedFirstWord') === "true" && localStorage.getItem('guessedSecondWord') === "true") {
+      console.log("entro")
+      Swal.fire({
+        icon: 'success',
+        title: '¡Has ganado!',
+        text: "Vuelve mañana para continuar la racha.",
+        confirmButtonText: "OK",
+        position: 'top'
       });
+    } else {
+      Swal.fire({
+        icon: 'success',
+        title: '¡Palabra correcta!',
+        showConfirmButton: false,
+        timer: 2500,
+        position: 'top'
+      });
+    }
+    // Set the class name of the corresponding form elements to null.
+    // This clears any previous classes that may have been added.
+    isForm1 ? setClassName1(null) : setClassName2(null);
+
+    // Loop through each input element in the inputList.
+    inputList.forEach((element) => {
+      // If the element is a button, hide it by setting its class name to 'displayNone'.
+      if (element.tagName === "BUTTON") {
+        element.className = 'displayNone';
+      }
+      // If the element has a value, set its class name to 'inputWord greenInput firstInput' or 'inputWord greenInput secondInput'
+      // depending on the value of isForm1. Also, set its readOnly property to true so that the user cannot modify its value.
+      else if (element.value) {
+        element.className = `inputWord greenInput ${isForm1 ? "firstInput" : "secondInput"}`;
+        element.readOnly = true;
+      }
     });
+
   };
 
 
@@ -600,9 +614,6 @@ export const Word = () => {
       {trueWords}
       {showModal && (
         <Modal onClose={() => setShowModal(false)}>
-          <h2>Relación</h2>
-          <p>Aquí va la explicación.</p>
-          <p>En proceso.</p>
         </Modal>
       )}
       <div className='divHearts'>

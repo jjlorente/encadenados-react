@@ -26,7 +26,7 @@ h1 {
 
 .Word{
   border-radius: 10px 10px 10px 10px;
-  font-weight: 900 !important;
+  font-weight: 900;
 }
 
 .wordTip{
@@ -325,4 +325,8 @@ h1 {
   flex-direction: row;
   gap:8px;
   margin-bottom: 0.6rem;
+}
+
+.loseInput {
+  background-color: #ff9393e0 !important;
 }

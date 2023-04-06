@@ -1,7 +1,7 @@
 import './Modal.css';
 
 export function Modal(props) {
-  const { children, onClose } = props;
+  const { onClose } = props;
 
   return (
     <div className="modal-overlay">
@@ -9,7 +9,9 @@ export function Modal(props) {
         <button className="modal-close" onClick={onClose}>
           X
         </button>
-        {children}
+        <h2>Relación</h2>
+        <p>Aquí va la explicación.</p>
+        <p>En proceso.</p>
       </div>
     </div>
   );
