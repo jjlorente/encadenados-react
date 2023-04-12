@@ -203,11 +203,10 @@ export const Word = () => {
     // Get year, month, and day from currentDate
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1;
-    const day = currentDate.getDate();
+    const day = currentDate.getDate()+1;
 
     // Format currentDate as a string
     const formattedDate = `${year}-${month}-${day}`;
-
     // Get the current daily word and check if it exists in localStorage
     const currentDailyWord = localStorage.getItem('dailyWord');
     const dailyWordExists = Boolean(currentDailyWord);
@@ -232,7 +231,7 @@ export const Word = () => {
       const formattedStoredDate = new Date(storedDate); 
       const storedYear = formattedStoredDate.getFullYear();
       const storedMonth = formattedStoredDate.getMonth() + 1; 
-      const storedDay = formattedStoredDate.getDate();
+      const storedDay = formattedStoredDate.getDate() < 10 ? "0" + formattedStoredDate.getDate() : formattedStoredDate.getDate();
       const formattedStoredDateStr = `${storedYear}-${storedMonth}-${storedDay}`;
 
       // If the current date is later than the stored date, reset certain data and update "day" and "dailyWord" in localStorage
@@ -246,7 +245,6 @@ export const Word = () => {
           ...prevState,
           word1: false
         }));
-
         // Update "day" in localStorage to currentDate
         localStorage.setItem("day", currentDate);
 
@@ -264,8 +262,6 @@ export const Word = () => {
         return true;
       }
     }
-
-    // Return false to indicate that a day has not passed
     return false;
   }
 
@@ -279,7 +275,6 @@ export const Word = () => {
   const checkWordsGuessed = async (word1, word2) => {
     // Set the class name for the first input field based on whether it has been filled or not.
     !word1 ? setClassName1('divForm') : setClassName1(null);
-    // Update the state for whether the first word has been guessed or not.
     word1 ?
       setWordsGuessed(prevState => ({
         ...prevState,
@@ -292,7 +287,6 @@ export const Word = () => {
 
     // Set the class name for the second input field based on whether it has been filled or not.
     !word2 ? setClassName2('divForm') : setClassName2(null);
-    // Update the state for whether the second word has been guessed or not.
     word2 ?
       setWordsGuessed(prevState => ({
         ...prevState,
@@ -315,14 +309,11 @@ export const Word = () => {
     const currentInputId = id;
     const nextInputId = currentInputId.slice(0, -1) + (Number(currentInputId.slice(-1)) + 1);
 
-    // Get the current and next input fields.
     const currentInput = document.getElementById(currentInputId);
     const nextInput = document.getElementById(nextInputId);
 
-    // Trim, convert to uppercase, and remove non-alphabetic characters from the value of the current input field.
     currentInput.value = currentInput.value.trim().toUpperCase().replace(/[^a-z]/gi, '');
 
-    // If there is a next input field and the value of the current input field is not empty, focus on the next input field.
     if (nextInput && currentInput.value !== '') {
       nextInput.focus();
     }
@@ -346,7 +337,6 @@ export const Word = () => {
     if (prevInput >= 1) {
       // Check if the backspace key was pressed, the current input field is empty, and the previous input field is not already filled with a correct letter
       if (event.key === "Backspace" && document.getElementById(id).value === "" && !prevInputElem.classList.contains("greenInput")) {
-        // Move focus to the previous input field and prevent the default action of the backspace key
         document.getElementById(input).focus();
         event.preventDefault();
       }
@@ -516,9 +506,7 @@ export const Word = () => {
    */
   const showCorrectWordMessage = async (inputList, isForm1) => {
     // Display a success message using Swal, a popular third-party library for displaying alerts and modals.
-    console.log( localStorage.getItem('guessedFirstWord') , localStorage.getItem('guessedSecondWord'))
     if (localStorage.getItem('guessedFirstWord') === "true" && localStorage.getItem('guessedSecondWord') === "true") {
-      console.log("entro")
       Swal.fire({
         icon: 'success',
         title: '¡Has ganado!',
@@ -545,8 +533,6 @@ export const Word = () => {
       if (element.tagName === "BUTTON") {
         element.className = 'displayNone';
       }
-      // If the element has a value, set its class name to 'inputWord greenInput firstInput' or 'inputWord greenInput secondInput'
-      // depending on the value of isForm1. Also, set its readOnly property to true so that the user cannot modify its value.
       else if (element.value) {
         element.className = `inputWord greenInput ${isForm1 ? "firstInput" : "secondInput"}`;
         element.readOnly = true;
@@ -561,13 +547,9 @@ export const Word = () => {
    * @return {number} The updated number of hearts after the decrement.
    */
   async function controlHearts() {
-    // Get the current number of hearts and subtract one.
     const actualHeartsErrors = hearts - 1;
-    // Update the state with the new number of hearts.
     setHearts(actualHeartsErrors);
-    // Update the local storage with the new number of hearts.
     localStorage.setItem("hearts", actualHeartsErrors);
-    // Return the new number of hearts.
     return actualHeartsErrors;
   }
 
@@ -591,7 +573,6 @@ export const Word = () => {
       // Executes the following code after the user clicks the OK button in the modal dialog.
       // Iterates over the input elements in the word.
       inputList.map((element, index) => { 
-        // Checks if the input element has not been correctly guessed yet and a hint has not been given.
         if (!element.className.includes('greenInput') && !found) { 
           // Reveals one additional letter.
           isForm1 ? element.value = words[1][index] : element.value = words[3][index]; 
