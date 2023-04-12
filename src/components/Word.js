@@ -203,7 +203,7 @@ export const Word = () => {
     // Get year, month, and day from currentDate
     const year = currentDate.getFullYear();
     const month = currentDate.getMonth() + 1;
-    const day = currentDate.getDate()+1;
+    const day = currentDate.getDate();
 
     // Format currentDate as a string
     const formattedDate = `${year}-${month}-${day}`;
